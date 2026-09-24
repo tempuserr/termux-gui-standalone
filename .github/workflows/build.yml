@@ -32,19 +32,6 @@ jobs:
         with:
           name: termux-gui-debug.apk
           path: termux-gui-standalone.apk
-
-      - name: Diagnostyka APK
-        run: |
-          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
-          echo "== rozmiar i suma =="
-          ls -l termux-gui-standalone.apk
-          sha256sum termux-gui-standalone.apk
-          echo "== zipalign =="
-          "$BT/zipalign" -c -v 4 termux-gui-standalone.apk | tail -5 || true
-          echo "== kompresja resources.arsc i bibliotek =="
-          unzip -v termux-gui-standalone.apk | grep -E 'resources.arsc|\.so$' || true
-          echo "== manifest =="
-          "$BT/aapt2" dump badging termux-gui-standalone.apk | grep -E 'sharedUser|debuggable|application-icon|launchable|native-code' || true
           
       - name: Create release
         if: ${{ inputs.tag != '' }}
