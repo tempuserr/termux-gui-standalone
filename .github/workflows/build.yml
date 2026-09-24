@@ -1,25 +1,49 @@
 name: Build
 
 on:
-  release:
-    types: [published]
-  push:
-    branches:
-    - main
-  
-  
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag wydania, np. v1.0.0-standalone.1 (puste = tylko build, bez wydania)'
+        required: false
+        default: ''
+      prerelease:
+        description: 'Oznacz wydanie jako pre-release'
+        type: boolean
+        default: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-    - name: Clone repository
-      uses: actions/checkout@v4
-    - name: Build
-      run: ./gradlew assembleDebugMinify
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: termux-gui-debug.apk
-        path: ./app/build/outputs/apk/debugMinify/app-debugMinify.apk
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: ./gradlew assembleDebugMinify
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debugMinify/app-debugMinify.apk termux-gui-standalone.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: termux-gui-debug.apk
+          path: termux-gui-standalone.apk
+
+      - name: Create release
+        if: ${{ inputs.tag != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          FLAGS=""
+          if [ "$PRERELEASE" = "true" ]; then FLAGS="--prerelease"; fi
+          gh release create "$TAG" termux-gui-standalone.apk \
+            --target "$GITHUB_SHA" \
+            --title "$TAG" \
+            --notes-file STANDALONE.md \
+            $FLAGS
