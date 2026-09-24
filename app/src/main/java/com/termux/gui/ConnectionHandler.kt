@@ -18,9 +18,8 @@ import java.nio.ByteBuffer
 import java.util.concurrent.LinkedBlockingQueue
 
 /**
- * Handles one connection. This should only be run in a handler Thread.
- * Checks if the connection comes from a Termux program and terminates the connection if not.
- * Handles the protocol negotiation, then delegates the connection further to the correct handler for the protocol type and version.
+ * Handles one GUI protocol connection, negotiates the protocol version/type,
+ * and delegates the connection to the corresponding protocol implementation.
  */
 class ConnectionHandler(private val request: GUIService.ConnectionRequest, private val service: GUIService) : Runnable {
     class Message {
@@ -73,11 +72,6 @@ class ConnectionHandler(private val request: GUIService.ConnectionRequest, priva
                 event.use {
                     main.connect(LocalSocketAddress(request.mainSocket))
                     event.connect(LocalSocketAddress(request.eventSocket))
-                    // check if it is a Termux program that wants to connect to the plugin
-                    if (main.peerCredentials.uid != app.applicationInfo.uid || event.peerCredentials.uid != app.applicationInfo.uid) {
-                        return
-                    }
-                    
                     
                     // protocol handshake
                     
