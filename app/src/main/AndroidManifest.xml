@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:sharedUserId="com.termux">
+    xmlns:tools="http://schemas.android.com/tools">
     
     <!-- According to google surveys EGL2.0 should be available on all devices anyways, but you should declare it in the manifest. -->
     <uses-feature
@@ -52,7 +51,7 @@
         <receiver
             android:name=".ServiceShutdownReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity
             android:name=".GUIWidgetConfigurationActivity"
@@ -101,7 +100,7 @@
         <receiver
             android:name=".GUIReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
