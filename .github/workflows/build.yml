@@ -33,6 +33,13 @@ jobs:
           name: termux-gui-debug.apk
           path: termux-gui-standalone.apk
 
+      - name: Diagnostyka APK
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          "$BT/apksigner" verify --verbose --print-certs termux-gui-standalone.apk
+          "$BT/aapt2" dump badging termux-gui-standalone.apk | head -20
+          unzip -l termux-gui-standalone.apk | head -30
+
       - name: Create release
         if: ${{ inputs.tag != '' }}
         env:
