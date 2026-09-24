@@ -1,3 +1,11 @@
+# Termux:GUI Standalone
+
+This is upstream fork of Termux:GUI working with **any** app, not only allowed to call by Termux-app.
+For information see [STANDALONE.md](./STANDALONE.md). 
+
+---
+_(original upstream doc below)_
+
 # Termux:GUI
 
 [<img src="https://img.shields.io/github/v/release/termux/termux-gui?include_prereleases"/>](https://github.com/termux/termux-gui/releases)
