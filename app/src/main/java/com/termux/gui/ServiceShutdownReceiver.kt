@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 
 /**
- * Stops the service if a broadcast is received, for use with am from Termux.
+ * Stops the GUI service when requested by a local client through an explicit broadcast.
  */
 class ServiceShutdownReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
